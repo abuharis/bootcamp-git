@@ -1,19 +1,29 @@
 #!/usr/bin/bash
 
-counter=$1
+num=$1
 filename=$2
 
-if [ "$counter" -gt "20" ] || [ -z $filename ] || ! [[ "$counter" =~ ^[0-9]+$ ]];
+if [ "$num" -gt "20" ] || [ -z $filename ] || ! [[ "$num" =~ ^[1-9]+$ ]];
 then
         echo "Please provide correct args:"
-        echo "Number must be smaller than 20"
+        echo "Number must be between 0 and 21"
         echo "Must have name"
         echo "Example: ./bulk_create.sh 10 name"  
 else
-	for i in $(seq 0 $counter);
-        do
+	counter=0
+	for i in $(seq 1 $num)
+	do
+	if [ ! -f "$2_$i.sh" ];
+	then
 		bash_location=$(which bash)
                 echo "#!"$bash_location > $2_$i.sh
                 chmod u+x $2_$i.sh
-        done
+		echo "File "$2"_"$i".sh created"
+		counter=$((counter+1))
+
+       	else
+		echo "File "$2"_"$i".sh already exists"
+	fi
+ 	done
+	echo ""$counter" files created" 
 fi
